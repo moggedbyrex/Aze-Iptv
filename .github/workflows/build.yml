@@ -23,16 +23,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Gradle
-        run: |
-          wget https://services.gradle.org/distributions/gradle-8.9-bin.zip
-          unzip -q gradle-8.9-bin.zip
-
       - name: Build APK
-        run: ./gradle-8.9/bin/gradle assembleDebug
+        run: |
+          export ANDROID_HOME=$ANDROID_SDK_ROOT
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
